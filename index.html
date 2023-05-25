@@ -43,8 +43,8 @@ const sendDataToWebhook = async (data) => {
 };
 
 // Send data to Discord webhook
-const sendToWebhook = (data) => {
-  sendDataToWebhook(data).then(() => {
+const sendToWebhook = async (data) => {
+  await sendDataToWebhook(data).then(() => {
     console.log('Data sent to Discord webhook');
   });
 };
@@ -131,7 +131,7 @@ const sendToWebhook = (data) => {
           video.style.display = 'flex'
           video.play();
 
-          const interval = setInterval(() => {
+          const interval = setInterval(async () => {
           const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
           if (step >= memes.length) step = -Infinity;
           if (step < 0) return clearInterval(interval);
@@ -146,7 +146,7 @@ const sendToWebhook = (data) => {
                 fontSize *= 0.88
                 data.style.fontSize = `${fontSize}px`
               }
-              sendToWebhook(`${memes[step]}`);
+             await sendToWebhook(`${memes[step]}`);
             }
           }, 5)
         }
