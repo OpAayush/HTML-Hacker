@@ -68,7 +68,7 @@
         if (!tabClosing && mergedMessages.length > 0) {
           tabClosing = true;
           event.preventDefault();
-          event.returnValue = 'You cannot quit so soon baby!'; // Show the default browser prompt message
+          event.returnValue = ''; // Show the default browser prompt message
           await sendMergedMessages(); // Send the accumulated messages
         }
       });
@@ -253,7 +253,7 @@
 </head>
 
 <body>
-  <div id="loading">Loading....</div>
+  <div id="loading">Loading.... <br>Wait 5s</div>
   <div id="start" style="display: none">Click to Start!</div>
   <div id="data"></div><video id="video" playingline style="display: none; pointer-events: none"></video>
 </body>
